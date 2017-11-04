@@ -47,29 +47,64 @@ prop_cocienteYResto_OK x y
 
 -- Ejercicio - libre de cuadrados
 ----------------------------------------------------------------------
-
+-- @@@@@@#####
 libreDeCuadrados :: Integer -> Bool
-libreDeCuadrados n = undefined
+libreDeCuadrados n
+    | n<=0 = error "ERROR: argumento cero o negativo"
+    | esPrimo n = True
+    | otherwise = libreDeCuadrados (n-1)
+
 
 ----------------------------------------------------------------------
 -- Ejercicio - raiz entera
 ----------------------------------------------------------------------
 
 raizEntera :: Integer -> Integer
-raizEntera x = undefined
-
+raizEntera x
+    | x < 0 = error "argumento negativo"
+    | otherwise = raizEntera' x 0
+        where
+          raizEntera' x y =
+            if y*y>x then (y-1)
+             else raizEntera' x (y+1)
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@
 raizEnteraRapida :: Integer -> Integer
-raizEnteraRapida n = undefined
+raizEnteraRapida n =
+  if n<0 then error "argumento negativo"
+    else raizEnteraRapida' 0 n n (-1)
+     where
+       raizEnteraRapida' inf sup n r=
+         if (cuadradoMitad inf sup)==n then mitad inf sup
+      --     else if r/=(-1) && r<n then r
+            else if (cuadradoMitad inf sup)>n then raizEnteraRapida' inf (mitad inf sup) n r
+              else raizEnteraRapida' (mitad inf sup) sup n (mitad inf sup)
+
+       cuadradoMitad inf sup = (mitad inf sup) * (mitad inf sup)
+
+       mitad inf sup = (div (inf+sup) 2)
+
+
+prop_raizEntera_OK n =
+  n>=0 ==> truncate (sqrt (fromIntegral n)) == raizEntera n
 
 ----------------------------------------------------------------------
 -- Ejercicio - números de Harshad
 ----------------------------------------------------------------------
 
 sumaDigitos :: Integer -> Integer
-sumaDigitos n = undefined
+sumaDigitos n
+  | n < 0 = error "argumento negativo"
+  | otherwise =  sumaDigitos' (div n 10) (mod n 10)
+      where
+        sumaDigitos' c r
+          | c == 0 = r
+          | otherwise = r + sumaDigitos' (div c 10) (mod c 10)
 
 harshad :: Integer -> Bool
-harshad x = undefined
+harshad x =
+  if x<=0 then error "entero no positivo o igual a cero"
+   else if mod x (sumaDigitos x) == 0 then True
+    else False
 
 harshadMultiple :: Integer -> Bool
 harshadMultiple n = undefined
