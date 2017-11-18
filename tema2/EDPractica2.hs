@@ -70,19 +70,28 @@ divisores' x
 
 -- 8.a
 esPrimo :: Integer -> Bool
-esPrimo x = undefined
+esPrimo x = if divisores x == [1,x] then True
+                else False
 
 -- 8.b
 primosHasta :: Integer -> [Integer]
-primosHasta x = undefined
+primosHasta x = primosHastaAc x 1 []
+    where
+      primosHastaAc x n a
+          | x==n = if esPrimo n then a++[n] else a
+          | otherwise = if esPrimo n then primosHastaAc x (n+1) (a ++ [n])
+                          else primosHastaAc x (n+1) a
+
+primosHasta2 :: Integer -> [Integer]
+primosHasta2 x = [ x | x <- [1..x ], esPrimo x ]
 
 -- 8.c
 primosHasta' :: Integer -> [Integer]
-primosHasta' x = undefined
+primosHasta' x = filter esPrimo [1..x]
 
 -- 8.d
 p1_primos :: Integer -> Bool
-p1_primos n = primosHasta n == primosHasta' n
+p1_primos n = primosHasta2 n == primosHasta' n
 
 -------------------------------------------------------------------------------
 -- Ejercicio 13 - hoogle
@@ -99,8 +108,10 @@ desconocida xs = and [ x <= y | (x, y) <- zip xs (tail xs) ]
 -------------------------------------------------------------------------------
 
 -- 14.a - usando takeWhile y dropWhile
-inserta :: undefined
-inserta = undefined
+inserta :: Integer -> [Integer] -> [Integer]
+inserta x xs = inserta' x (takeWhile (<x) xs) (dropWhile (<x) xs)
+    where
+      inserta' x a b = (a ++ [x] ++ b)
 
 -- 14.b - mediante recursividad
 insertaRec :: undefined

@@ -1,4 +1,4 @@
-<pre><div class="text_to_html">-------------------------------------------------------------------
+-- <pre><div class="text_to_html">-------------------------------------------------------------------
 -- Estructuras de Datos
 -- Grados en Ingeniería Informática, del Software y de Computadores
 -- Tema 2. Características de la Programación Funcional
@@ -871,4 +871,4 @@ age (Pers _ _ ag) = ag
 
 initials :: Person -> (Char, Char)
 initials (Pers (n:_) (s:_) _ ) = (n,s)
-</div></pre>
+-- </div></pre>
