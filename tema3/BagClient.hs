@@ -2,7 +2,7 @@
 -- Estructuras de Datos. 2º ETSI Informática. UMA
 -- Práctica 3 - Uso del TAD Bag mediante plegado
 --
--- Alumno: APELLIDOS, NOMBRE
+-- Alumno: FERNÁNDEZ MÁRQUEZ, JOSÉ LUIS
 -------------------------------------------------------------------------------
 
 module BagClient where
@@ -47,7 +47,10 @@ keys bag = foldBag f [] bag
 -- [('a',5),('b',2),('c',1),('d',1),('r',2)]
 
 bag2List :: Ord a => Bag a -> [(a, Int)]
-bag2List = undefined
+bag2List bag = foldBag f [] bag
+    where
+      f x ox solRestoBolsa = (x, ox) : solRestoBolsa
+
 
 -------------------------------------------------------------------------------
 
@@ -57,7 +60,9 @@ bag2List = undefined
 -- 11
 
 cardinal :: Ord a => Bag a -> Int
-cardinal = undefined
+cardinal bag = foldBag f 0 bag
+    where
+      f x ox solRestoBolsa = 1 + solRestoBolsa
 
 -------------------------------------------------------------------------------
 
@@ -68,9 +73,29 @@ cardinal = undefined
 -- > contains 'z' (mkBag "abracadabra")
 -- False
 
-contains :: Ord a => a -> Bag a -> Bool
-contains x = undefined
 
+contains :: Ord a => a -> Bag a -> Bool
+contains n bag = foldBag f False bag
+     where
+       f x ox solRestoBolsa
+           | occurrences n bag > 0 = True
+           | otherwise = False
+{-
+contains n bag
+    | occurrences n bag > 0 = True
+    | otherwise = False
+-}
+{-
+contains x = foldBag (\ y _ sol -> x==y || sol) False
+-}
+
+
+{- ESTE EJEMPLO NO FUNCIONA POR NODE NO ES ACCESIBLE DESDE FUERA, SOLO SE ACCEDE A LOS ELEMENTOS DE LA INTERFAZ
+contains n (Node x xo s)
+    | n == x = True
+    | x == Empty = False
+    | otherwise = (contains n s)
+-}
 -------------------------------------------------------------------------------
 -- maxOcurrences: devuelve el número de veces que aparece el elemento que
 -- aparece más veces en una bolsa
@@ -79,7 +104,9 @@ contains x = undefined
 -- 5
 
 maxOcurrences :: Ord a => Bag a -> Int
-maxOcurrences = undefined
+maxOcurrences bag = foldBag f 0 bag
+    where
+      f x xo solRestoBolsa = max xo solRestoBolsa
 
 -------------------------------------------------------------------------------
 -- mostCommons: devuelve los elementos que aparecen más veces en la bolsa y su
@@ -89,4 +116,8 @@ maxOcurrences = undefined
 -- [('a',3), ('b',3)]
 
 mostCommons :: Ord a => Bag a -> [(a,Int)]
-mostCommons = undefined
+mostCommons bag = foldBag f [] bag
+    where
+      f x xo solRestoBolsa
+          | xo==(maxOcurrences bag) = ((x,xo) : solRestoBolsa)
+          | otherwise = solRestoBolsa

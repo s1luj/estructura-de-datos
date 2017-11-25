@@ -110,6 +110,7 @@ insert :: Ord a => a -> Bag a -> Bag a
 insert x Empty = Node x 1 Empty
 insert x (Node y oy s)
     | x == y = (Node y (oy+1) s)
+    | x < y = Node x 1 (Node y oy s)
     | otherwise = (Node y oy (insert x s))
 
 -- devuelve el número de ocurrencias de un elemento en una bolsa
@@ -125,7 +126,8 @@ occurrences x (Node y oy s)
 delete :: (Ord a) => a -> Bag a -> Bag a
 delete x Empty = Empty
 delete x (Node y oy s)
-    | x==y = Node y (oy-1) s
+    | x==y && oy>1 = Node y (oy-1) s
+    | x==y = s
     | otherwise = Node y oy (delete x s)
 
 -- instancia de la clase Show para imprimir las bolsas
@@ -153,12 +155,12 @@ isEmpty_insert x s = isEmpty (insert x s) == False
 
 occurrences_empty x = occurrences x empty == 0
 occurrences_insert_1 x s = occurrences x (insert x s) >= 1
-occurrences_insert_2 x y s = x /= y ==> occurrences x (insert y s) == undefined
+occurrences_insert_2 x y s = x /= y ==> occurrences x (insert y s) == occurrences x s
 
 -- transformadores
 delete_empty x = delete x empty == Empty
 delete_insert_1 x s = delete x (insert x s) == s
-delete_insert_2 x y s  = x /= y ==> delete x (insert y s) == undefined
+delete_insert_2 x y s  = x /= y ==> delete x (insert y s) == insert y (delete x s)
 
 type T = Char -- Integer, etc.
 
@@ -167,10 +169,10 @@ check_Bag = do
                quickCheck (isEmpty_insert :: T -> Bag T -> Bool)
                quickCheck (occurrences_empty :: T -> Bool)
                quickCheck (occurrences_insert_1 :: T -> Bag T -> Bool)
-               -- quickCheck (occurrences_insert_2 :: T -> T -> Bag T -> Property)
+               quickCheck (occurrences_insert_2 :: T -> T -> Bag T -> Property) -- <=
                quickCheck (delete_empty :: T -> Bool)
-               quickCheck (delete_insert_1 :: T -> Bag T -> Bool)
-               -- quickCheck (delete_insert_2 :: T -> T -> Bag T -> Property)
+               quickCheck (delete_insert_1 :: T -> Bag T -> Bool) -- <=
+               quickCheck (delete_insert_2 :: T -> T -> Bag T -> Property) -- <=
 
 -------------------------------------------------------------------------------
 -- Operaciones auxiliares del TAD Bag
@@ -190,19 +192,30 @@ en cuenta las ocurrencias de cada elemento.
 -}
 
 union :: Ord a => Bag a -> Bag a -> Bag a
-union s Empty = undefined
-union Empty s =  undefined
-union (Node x ox s) (Node y oy t) = undefined
+union s Empty = s
+union Empty s = s
+union (Node x ox s) (Node y oy t)
+    | x==y = Node x (ox+oy) (union s t)
+    | x<y = Node x ox (union s (Node y oy t))
+    | x>y = Node y oy (union (Node x ox s) t)
 
 intersection :: Ord a => Bag a -> Bag a -> Bag a
-intersection s Empty = undefined
-intersection Empty s = undefined
-intersection (Node x ox s) (Node y oy t) = undefined
+intersection s Empty = Empty
+intersection Empty s = Empty
+intersection (Node x ox s) (Node y oy t)
+    | x == y = Node x (min ox oy) (intersection s t)
+    | x < y = intersection s (Node y oy t)
+    | x > y = intersection (Node x ox s) t
 
 difference :: Ord a => Bag a -> Bag a -> Bag a
-difference s Empty = undefined
-difference Empty s = undefined
-difference (Node x ox s) (Node y oy t) = undefined
+difference s Empty = s
+difference Empty s = Empty
+difference (Node x ox s) (Node y oy t)
+    | x==y && ox>oy = Node x (ox-oy) (difference s t)
+    | x==y = difference s t
+    | x<y = Node x ox (difference s  (Node y oy t))
+    | x>y = difference (Node x ox s) t
+
 
 -- propiedades QuickCheck para comprobar union, intersection y difference
 
@@ -242,10 +255,10 @@ de pasos que realiza cada operación del TAD Bag
     operación        números de pasos
     ---------------------------------
     empty                O(1)
-    isEmpty
-    insert
-    delete
-    occurrences
+    isEmpty              O(1)
+    insert               O(n)
+    delete               O(n)
+    occurrences          O(n)
 
 
 
