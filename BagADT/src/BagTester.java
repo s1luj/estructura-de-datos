@@ -6,13 +6,15 @@
  */
 
 import dataStructures.bag.Bag;
+import dataStructures.bag.SortedArrayBag;
 import dataStructures.bag.SortedLinkedBag;
 
 public class BagTester {
 
 	public static void main(String[] args) {
 
-		Bag<Character> b = new SortedLinkedBag<>();
+		//Bag<Character> b = new SortedLinkedBag<>();
+		Bag<Character> b = new SortedArrayBag<>();
 
 		String cervantes = "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, "
 				+ "no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, "
@@ -77,6 +79,20 @@ public class BagTester {
 		printVowels(b);
 
 		System.out.println(b.isEmpty());
+		
+		//6. prueba de copyOf
+//		SortedArrayBag destino=new SortedArrayBag<>();
+//		SortedArrayBag fuente=new SortedArrayBag<>();
+		SortedLinkedBag destino=new SortedLinkedBag<>();
+		SortedLinkedBag fuente=new SortedLinkedBag<>();
+		fuente.insert('4');
+		fuente.insert('4');
+		fuente.insert('3');
+		destino.copyOf(fuente);
+//		b.insert('6');
+		System.out.println("Prueba de copyOf:");
+		System.out.println("b (source): " + fuente);
+		System.out.println("destino  ): " + destino);
 	}
 
 	public static <T extends Comparable<? super T>> void removeAll(Bag<T> b, T c) {

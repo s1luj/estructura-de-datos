@@ -6,6 +6,7 @@
  */
 
 import dataStructures.bag.Bag;
+import dataStructures.bag.SortedArrayBag;
 import dataStructures.bag.SortedLinkedBag;
 import static dataStructures.bag.BagUtils.mostFrequent;
 
@@ -13,15 +14,18 @@ public class BagUtilsDemo {
 
 	public static void main(String[] args) {
 
-		Bag<Character> empty = new SortedLinkedBag<>();
+		//Bag<Character> empty = new SortedLinkedBag<>();
+		Bag<Character> empty = new SortedArrayBag<>();
 
-		Bag<Character> singleton = new SortedLinkedBag<>();
+		//Bag<Character> singleton = new SortedLinkedBag<>();
+		Bag<Character> singleton = new SortedArrayBag<>();
 		singleton.insert('S');
 
 		String cervantes = "En un lugar de la Mancha";
 		String text = cervantes;
-		Bag<Character> bag = new SortedLinkedBag<>();
-
+		//Bag<Character> bag = new SortedLinkedBag<>();
+		Bag<Character> bag = new SortedArrayBag<>();
+		
 		// 1. feed the bag with the text
 		for (int i = 0; i < text.length(); i++) {
 			if (Character.isAlphabetic(text.charAt(i))) {

@@ -3,13 +3,14 @@
  * PRACTICA 4.
  * Ejercicio 12.b de la tercera relación. Implementar el TAD Bolsa.
  *
- * Alumno: APELLIDOS, NOMBRE
+ * Alumno: FERNÁNDEZ MÁRQUEZ, JOSÉ LUIS
  ********************************************************************/
 
 package dataStructures.bag;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class SortedArrayBag<T extends Comparable<? super T>> implements Bag<T> {
 
@@ -39,7 +40,7 @@ public class SortedArrayBag<T extends Comparable<? super T>> implements Bag<T> {
 
 	@SuppressWarnings("unchecked")
 	public SortedArrayBag() {
-		value = (T[]) new Object[INITIAL_CAPACITY];
+		value = (T[]) new Comparable[INITIAL_CAPACITY];
 		count = new int[INITIAL_CAPACITY];
 		nextFree = 0;
 	}
@@ -145,16 +146,25 @@ public class SortedArrayBag<T extends Comparable<? super T>> implements Bag<T> {
 				}
 				nextFree--;
 			}
-		} else {
-			throw new RuntimeException("DELETE ERROR: el elemento a borrar no esta en la bolsa");
+//		} else {
+//			throw new RuntimeException("DELETE ERROR: el elemento a borrar no esta en la bolsa");
 		}
 	}
 
 	@Override
 	public void copyOf(Bag<T> source) {
 		// TODO Auto-generated method stub
-		// the implementation of 'copyOf' cannot use the iterator
-		
+		Iterator<T> it = source.iterator();
+		value = (T[]) new Comparable[INITIAL_CAPACITY];
+		count = new int[INITIAL_CAPACITY];
+		nextFree = 0;
+		while(it.hasNext()) {
+			T x = it.next();
+			int n = source.occurrences(x);
+			for (int c = 0; c<n; c++) {
+				this.insert(x);
+			}
+		}	
 	}
 
 	@Override
@@ -169,6 +179,40 @@ public class SortedArrayBag<T extends Comparable<? super T>> implements Bag<T> {
 	@Override
 	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub
-		return null;
+		return new SortedArrayBagIterator();
 	}
+	private class SortedArrayBagIterator implements Iterator<T>{
+		int current;
+		int contador;
+		boolean cambio;
+		public SortedArrayBagIterator() {
+			current=0;
+			contador=0;
+			cambio=true;
+		}
+		@Override
+		public boolean hasNext() {
+			return current!=nextFree;
+		}
+		@Override
+		public T next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			if (cambio) {
+				contador=count[current];
+			}
+			T x = value[current];
+			if (contador==1) {
+				current++;
+				cambio=true;
+			} else {
+				contador--;
+				cambio=false;
+			}
+			return x;
+		}
+	}
+	
+	
 }
