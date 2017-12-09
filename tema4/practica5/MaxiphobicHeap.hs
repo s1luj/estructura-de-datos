@@ -73,7 +73,7 @@ merge h@(Node x w lh rh) h'@(Node x' w' lh' rh')
           | (size lh) > (size rh) && (size lh) > (size h') = Node x peso (merge rh h') lh
           | (size h') > (size lh) && (size h') > (size rh) = Node x peso (merge lh rh) h'
       -- En caso de empate
-          | (size rh) >= (size lh) || (size rh) >= (size h') = Node x peso (merge lh h') rh -- He puesto el igual para que coincida con el ejemplo drawStepwise "amasa"
+          | (size rh) >= (size lh) || (size rh) >= (size h') = Node x peso (merge lh h') rh
           | (size lh) >= (size rh) || (size lh) >= (size h') = Node x peso (merge rh h') lh
 --          | (size h') > (size lh) && (size h') > (size rh) = Node x peso (merge lh rh) h'
           | otherwise = Node x peso (merge lh rh) h'
