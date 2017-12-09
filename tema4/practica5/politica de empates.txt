@@ -1,0 +1,12 @@
+Política de empates
+
+El enunciado del ejercicio no dice nada sobre qué hacer para romper los empates a la hora de mezclar montículos. Esto lleva a que existan varias soluciones correctas. Vamos a establecer una política concreta para romper empates, de manera que la solución sea única (precisamente la que muestran los ficheros .svg que acompañan a la práctica).
+
+Al mezclar 2 montículos con merge h1 h2 se escoge como raíz de la mezcla la raíz más pequeña. Para deshacer los empates por clave, si las raíces de h1 y h2 son iguales, se tomará como raíz de la mezcla la de h1. En cualquier caso, tras escoger la raíz de la mezcla nos encontramos con 3 montículos: los hijos derecho r e izquierdo l del montículo con la raíz más pequeña y el otro montículo. Como regla general, se mezclan los 2 más ligeros y se cuelga la mezcla a la izquierda; el más pesado se cuelga a la derecha. ¿Qué pasa si hay 2 montículos con el mismo peso máximo? ¿Y si los 3 montículos pesan lo mismo? ¿Cuál se cuelga a la derecha y cuáles se mezclan?
+
+
+Las reglas para deshacer el empate por peso son, por orden de prioridad:
+
+        Si el hijo derecho r es uno de los más pesados, se cuelga a la derecha
+        Si el hijo izquierdo l es uno de los más pesados, se cuelga a la derecha
+        Si el otro montículo es el más pesado, se cuelga a la derecha 

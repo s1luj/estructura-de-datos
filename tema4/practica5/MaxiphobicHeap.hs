@@ -59,12 +59,26 @@ delMin (Node _ _ lh rh) = merge lh rh
 ----------------------------------------------------------
 
 -- recursively merges smallest subheaps. Achieves O(log n) complexity
+
+
 merge :: (Ord a) => Heap a -> Heap a -> Heap a
 merge h Empty = h
 merge Empty h' = h'
 merge h@(Node x w lh rh) h'@(Node x' w' lh' rh')
-    | x <= x' = (Node x (w+w') (merge lh rh) h')
-    | otherwise = (Node x' (w+w') h (merge lh' rh'))
+    | x <= x' = merge' x (w+w') lh rh h'
+    | otherwise = merge' x' (w+w') lh' rh' h
+    where
+      merge' x peso lh rh h'
+          | (size rh) > (size lh) && (size rh) > (size h') = Node x peso (merge lh h') rh
+          | (size lh) > (size rh) && (size lh) > (size h') = Node x peso (merge rh h') lh
+          | (size h') > (size lh) && (size h') > (size rh) = Node x peso (merge lh rh) h'
+      -- En caso de empate
+          | (size rh) >= (size lh) || (size rh) >= (size h') = Node x peso (merge lh h') rh -- He puesto el igual para que coincida con el ejemplo drawStepwise "amasa"
+          | (size lh) >= (size rh) || (size lh) >= (size h') = Node x peso (merge rh h') lh
+--          | (size h') > (size lh) && (size h') > (size rh) = Node x peso (merge lh rh) h'
+          | otherwise = Node x peso (merge lh rh) h'
+
+
 
 ----------------------------------------------------------
 -- ^^^^^^^^^^^^^^-- SOLO TOCAR ARRIBA ^^^^^^^^^^^ --------
