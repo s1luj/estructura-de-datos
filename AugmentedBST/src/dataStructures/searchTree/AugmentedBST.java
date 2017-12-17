@@ -189,26 +189,156 @@ public class AugmentedBST<T extends Comparable<? super T>> {
     // returns i-th smallest key in BST (i=0 means returning the smallest value
     // in tree, i=1 the next one and so on).
     public T select(int i) {
-        return null;
+    	return selectRec(this.root,i);
+    	
+ /*   	if (root.left.weight==i) {
+        	return root.key;
+        } else if (root.left.weight<i) {
+        	return null;// hay que mirar por el lado derecho
+        } else if (root.left.weight>i) {
+        	return root.left.selectRec(i);
+        }
+ */	
+
+    }
+    private T selectRec(Tree<T> root, int i) {
+// -->  if(root.)
+    	
+    	if(root.left.weight==i) {
+    		return root.key;
+    	} else if (root.left.weight>i) {
+    		return selectRec(root.left,i);
+    	} else /*if (root.left.weight<i)*/ {
+    		return null;
+    	}
+//    	return null;
     }
 
     // returns largest key in BST whose value is less than or equal to k.
+    // devuelve la mayor clave del arbol cuyo valor es menor o igual que k
     public T floor(T k) {
-        return null;
+        return floorRec(root,k);
+    }
+    private T floorRec(Tree<T> root, T k) {
+       	if (root.key.equals(k)) {
+    		return k;
+    	} else if (root.key.compareTo(k)>0) { //izq
+    		if (root.left==null) {
+    			return null;
+    		} else {
+    			return floorRec(root.left, k);
+    		}
+    	} else {								//derecha
+    		if ((root.right==null)) { //????
+    			return root.key;
+    		} else {
+    			if (floorRec(root.right,k)==null) {
+    				return root.key;
+    			} else {
+    				return floorRec(root.right,k);
+    			}
+    		}
+    	}
     }
 
     // returns smallest key in BST whose value is greater than or equal to k.
     public T ceiling(T k) {
-        return null;
+        return ceilingRec(root, k);
+    }
+    private T ceilingRec(Tree<T> root, T k) {
+    	if (root.key.equals(k)) {
+    		return k;
+    	} else if (root.key.compareTo(k)>0) { //izq
+    		if((root.left==null) || (root.left.key.compareTo(k)<0)){
+    			return root.key;
+    		} else {
+    			return ceilingRec(root.left, k);
+    		}
+    	} else {
+    		if ((root.right==null)) {
+    			return null;
+    		} else if ((root.right.key.compareTo(root.key)>0)&&(root.key.compareTo(k)>0)) {
+    			return root.key;
+    		} else {
+    			return ceilingRec(root.right,k);
+    		}
+    	}
     }
 
     // returns number of keys in BST whose values are less than k.
+    // nº de claves del BST que son menores que k
     public int rank(T k) {
-        return 0;
+        return rankRec(root, k);
+    }
+    private int rankRec(Tree<T> root, T k) {
+    	if (root.key.equals(k)) {
+    		if(root.left==null) {
+    			return 0;
+    		} else {
+    			return root.left.weight;
+    		}
+    	} else if (root.key.compareTo(k)>0) { //izq
+    		if (root.left==null) {
+    			return 0;
+    		} else {
+    			return rankRec(root.left, k);
+    		}
+    	} else {							//derecha
+    		if (root.right==null) {
+    			return 1;
+    		} else {
+    			return 1+root.left.weight+rankRec(root.right, k);
+    		}
+    	}
     }
 
     // returs number of keys in BST whose values are in range lo to hi.
     public int size(T low, T high) {
-        return 0;
+        return sizeRec(root, low, high);
+    }
+    private int sizeRec(Tree<T> root, T low, T high) {
+    	if (high.compareTo(low)<0) {
+    		return 0;
+    	} else if (root.key.equals(high)) {
+    		if (root.left==null) {
+    			return 1;
+    		} else {
+    			return 1+sizeRec(root.left, low, high);
+    		}
+    	} else if (root.key.equals(low)) {
+    		if (root.right==null) {
+    			return 1;
+    		} else {
+    			return 1+sizeRec(root.right, low, high);
+    		}
+    	} else if (root.key.compareTo(low)<0) {		//derecha
+    		if (root.right==null) {
+    			return 0;
+    		} else {
+    			return sizeRec(root.right, low, high); 	
+    		}
+    	} else if (root.key.compareTo(high)>0) { // izq
+    		if (root.left==null) {
+    			return 0;
+    		} else {
+    			return sizeRec(root.left, low, high);
+    		}
+    		
+    	} else /*if (root.key.compareTo(high)<0)*/ {
+    		if (root.left==null) {
+    			if (root.right==null) {
+    				return 1;
+    			} else {
+    				return 1+sizeRec(root.right,low,high);
+    			}
+    		} else {
+    			if (root.right==null) {
+    				return 1+sizeRec(root.left,low, high);
+    			} else {
+    				return 1+sizeRec(root.left, low, high)+sizeRec(root.right,low,high);
+    			}
+    		}
+    		
+    	}
     }
 }
