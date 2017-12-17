@@ -190,28 +190,17 @@ public class AugmentedBST<T extends Comparable<? super T>> {
     // in tree, i=1 the next one and so on).
     public T select(int i) {
     	return selectRec(this.root,i);
-    	
- /*   	if (root.left.weight==i) {
-        	return root.key;
-        } else if (root.left.weight<i) {
-        	return null;// hay que mirar por el lado derecho
-        } else if (root.left.weight>i) {
-        	return root.left.selectRec(i);
-        }
- */	
-
     }
     private T selectRec(Tree<T> root, int i) {
-// -->  if(root.)
-    	
-    	if(root.left.weight==i) {
-    		return root.key;
-    	} else if (root.left.weight>i) {
-    		return selectRec(root.left,i);
-    	} else /*if (root.left.weight<i)*/ {
+    	if (root.weight<i+1) { //nulo (no hay tantos elementos)
     		return null;
+    	} else if ((root.left==null)||(root.left.weight==i)) { // raiz
+    		return root.key;
+    	} else if (root.left.weight+1<i+1) { //derecha
+    		return selectRec(root.right, i-root.left.weight-1);
+    	} else /*if (root.left.weight==i+1)*/ { // izquierda
+    		return selectRec(root.left, i);
     	}
-//    	return null;
     }
 
     // returns largest key in BST whose value is less than or equal to k.

@@ -9,6 +9,14 @@ public class MainAugmentedBST {
 			}
 			System.out.println(bst);
 			
+//prueba el select			resultados = 5 10 25 35 null
+/*			System.out.println(bst.select(0));
+			System.out.println(bst.select(1));
+			System.out.println(bst.select(4));
+			System.out.println(bst.select(6));
+			System.out.println(bst.select(10));
+*/			
+			
 // prueba el floor			resultados = null 5 5 5 10 25 35
 /*			System.out.println(bst.floor(4));
 			System.out.println(bst.floor(5));
