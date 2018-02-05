@@ -1,6 +1,6 @@
 /******************************************************************************
- * Student's name:
- * Student's group:
+ * Student's name: José Luis Fernández Márquez
+ * Student's group: 2º Computadores A
  * Data Structures. Grado en Informática. UMA.
 ******************************************************************************/
 

@@ -68,13 +68,14 @@ simplify :: Eq a => Tree a -> Tree a -> Tree a
 simplify (Unif x) (Unif y)
     | x == y = (Unif x)
     | otherwise = Node (Unif x) (Unif y)
-simplify x y = Node x y
+-- simplify x y = Node x y
 
 -------------------------------------------------------------------------------
 -- | Exercise d.
-get :: Int -> Vector -> a
+get :: Int -> Vector x -> a
 get n v@(V tam arbol)
     | n>tam-1 || n<0 = error "ERROR: n no valida"
+    | otherwise = getAux n
 
 -------------------------------------------------------------------------------
 -- | Exercise e.
